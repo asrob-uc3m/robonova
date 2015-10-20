@@ -23,7 +23,7 @@ byte ANGULO_SERVOA=150;
 
 void setup()
 {
-  Wire.begin(); // join i2c bus (address optional for master)
+  Wire.begin(); // join i2c bus 
 }
 
 void loop()
