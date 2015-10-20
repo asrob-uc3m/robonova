@@ -9,6 +9,15 @@
 
 // This example code is in the public domain.
 
+byte REGISTRO_INICIAL=0x00;
+byte ANGULO_SERVO3=10;
+byte ANGULO_SERVO4=30;
+byte ANGULO_SERVO5=50;
+byte ANGULO_SERVO6=70;
+byte ANGULO_SERVO7=90;
+byte ANGULO_SERVO8=110;
+byte ANGULO_SERVO9=130;
+byte ANGULO_SERVOA=150;
 
 #include <Wire.h>
 
@@ -17,15 +26,19 @@ void setup()
   Wire.begin(); // join i2c bus (address optional for master)
 }
 
-byte x = 0;
-
 void loop()
 {
   Wire.beginTransmission(4); // transmit to device #4
-  Wire.write("x is ");        // sends five bytes
-  Wire.write(x);              // sends one byte
+  Wire.write(REGISTRO_INICIAL);
+  Wire.write(ANGULO_SERVO3++);
+  Wire.write(ANGULO_SERVO4++);
+  Wire.write(ANGULO_SERVO5++);
+  Wire.write(ANGULO_SERVO6++);
+  Wire.write(ANGULO_SERVO7--);
+  Wire.write(ANGULO_SERVO8--);
+  Wire.write(ANGULO_SERVO9--);
+  Wire.write(ANGULO_SERVOA--);
   Wire.endTransmission();    // stop transmitting
 
-  x++;
   delay(500);
 }
