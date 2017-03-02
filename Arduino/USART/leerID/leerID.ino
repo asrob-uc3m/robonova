@@ -25,60 +25,93 @@
 #define RECEIVED1 5
 #define RECEIVED2 6
  
-byte BYTE[7];
+char flag=0;
 
 byte leerID(void);
 
 void setup() {
   // initialize both serial ports:
-  Serial.begin(9600);
+  Serial.begin(250000);
   Serial1.begin(19200,SERIAL_8N2);
-  Serial.print((int) leerID());
 }
 
 void loop()
 {
-  
-  // read from port 0, send to port 1:
-  if (Serial.available())
-  {
-    int inByte = Serial.read();
-    Serial1.write(inByte);
-  }
+  delay(100);
 
-  // read from port 0, send to port 1:
-  if (Serial.available()) 
-  {
-    int inByte = Serial.read();
-    Serial1.write(inByte);
-  }
+  leerID();
+  
+  delay(1000);
+  
+//  Serial.println("FIN");
+//  // read from port 0, send to port 1:
+//  if (Serial.available())
+//  {
+//    int inByte = Serial.read();
+//    Serial1.write(inByte);
+//  }
+//
+//  // read from port 0, send to port 1:
+//  if (Serial.available()) 
+//  {
+//    int inByte = Serial.read();
+//    Serial1.write(inByte);
+//  }
 }
+
 
 byte leerID(void)
 {
-  byte BYTE[7];
+  byte BYTESENT[7];
+  byte BYTERECEIVED[7];
   int i;
-  BYTE[HEADER]    =0x80;
-  BYTE[COMMAND]   =0xE7;
-  BYTE[DATA1]     =0X00;
-  BYTE[DATA2]     =0x00;
-  BYTE[CHECKSUM]  =0xFF-BYTE[HEADER]-BYTE[COMMAND]-BYTE[DATA1]-BYTE[DATA2];
-  
-  for(i=0; i<=4; i++)
+  BYTESENT[HEADER]    =0x80;
+  BYTESENT[COMMAND]   =0xE7;
+  BYTESENT[DATA1]     =0X00;
+  BYTESENT[DATA2]     =0x00;
+  BYTESENT[CHECKSUM]  =0xFF-((BYTESENT[HEADER]+BYTESENT[COMMAND]+BYTESENT[DATA1]+BYTESENT[DATA2])%0xFF);
+  BYTESENT[RECEIVED1] =0x00;
+  BYTESENT[RECEIVED2] =0x00;
+
+  for(i=0; i<=6; i++)
   {
-    Serial1.write(BYTE[i]):
+    Serial1.write(BYTESENT[i]);
   }
-  if (Serial1.available()) 
+
+  Serial1.flush(); 
+
+  for(i=0; i<=6; i++)
   {
-    BYTE[RECEIVED1] = Serial.read();
+    BYTERECEIVED[i]=Serial1.read();
+  }
+
+//  while(flag==0);
+//
+//  Serial.println("Recibo cosas");
+//
+//  Serial1.write(0x00);
+//  Serial1.flush() ;
+//  while(!Serial1.available());
+//  if (Serial1.available()) 
+//  {
+//    BYTE[RECEIVED1] = Serial1.read();
+
+//  }
+
+//  while(!Serial1.available());
+
+//    Serial1.write(0x00);
+//    Serial1.flush() ;
+//  while(!Serial1.available());
+//  if (Serial1.available()) 
+//  {
+//    BYTE[RECEIVED2] = Serial1.read();
+    
     Serial.print("Version= ");
-    Serial.print((int) BYTE[RECEIVED1]);
-  }
-  if (Serial1.available()) 
-  {
-    BYTE[RECEIVED2] = Serial.read();
+    Serial.println((int) BYTERECEIVED[RECEIVED1]);
     Serial.print("ID= ");
-    Serial.print((int) BYTE[RECEIVED2]);
-  }
-  return BYTE[RECEIVED2];
+    Serial.println((int) BYTERECEIVED[RECEIVED2]);
+
+//  }
+  return BYTERECEIVED[RECEIVED2];
 }

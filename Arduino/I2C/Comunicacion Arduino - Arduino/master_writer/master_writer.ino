@@ -24,6 +24,7 @@ byte ANGULO_SERVOA=150;
 void setup()
 {
   Wire.begin(); // join i2c bus 
+  Serial.begin(9600);
 }
 
 void loop()
@@ -39,6 +40,6 @@ void loop()
   Wire.write(ANGULO_SERVO9--);
   Wire.write(ANGULO_SERVOA--);
   Wire.endTransmission();    // stop transmitting
-
+  Serial.println("Enviado");
   delay(500);
 }
